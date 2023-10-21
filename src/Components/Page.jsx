@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from 'axios'  
 
 
 
 const Page = () => {
     let SelectedFilesProfile
+    const [fetchedData,setFetchedData] = useState([])
     const [CreateModal, SetCreateModel] = useState()
     const [EditModal, setEditmodal] = useState()
     const [imageTake,setImageTake] = useState()
@@ -55,11 +56,20 @@ const Page = () => {
      const CreateData = async() =>{
         console.log("haloooo");
         const response = await axios.post("http://localhost:3000/AddData",{heading,description,date,time,image,size})
+        SetCreateModel(false)
         console.log(response)
      }
 
+     const fetchData = async () =>{
+        const response = await axios.get("http://localhost:3000/getData")
+        // console.log(response.data.data)
+        setFetchedData(response.data.data)
+     }
+useEffect(()=>{
+  fetchData()
+},[CreateModal])
 
-
+console.log(fetchedData)
     return (
         <div>
             {
@@ -207,22 +217,27 @@ const Page = () => {
                                     </button>
 
                                 </div>
+
                                 <div className="w-full h-[400px] p-3 overflow-auto">
+                                {
+                                    fetchedData.map((item,index)=>(
+                                   
                                     <div className="w-full h-32  border-2 border-black mb-1  p-1">
                                         <div className="w-full h-full  p-1 flex gap-3">
                                             <div className=" w-1/5 h-full ">
                                                 <img
-                                                    src="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg?size=626&ext=jpg"
+                                                    src={item.image}
                                                     alt=""
                                                     className="w-full h-full object-cover"
                                                 />
                                             </div>
                                             <div className="w-3/5 h-full   ">
+
                                                 <div className="w-full h-14  overflow-auto flex justify-start items-center ">
-                                                    <h2 className="font-serif font-bold text-xl underline">Nihallll</h2>
+                                                    <h2 className="font-serif font-bold text-xl underline">{item.heading}</h2>
                                                 </div>
                                                 <div className="w-full h-12  mt-1 overflow-auto flex justify-start items-start">
-                                                    <h1 className="font-semibold text-lg" >This is a dummy data of that sim </h1>
+                                                    <h1 className="font-semibold text-lg" >{item.description} </h1>
                                                 </div>
                                             </div>
                                             <div className="w-[200px] h-full ">
@@ -235,9 +250,10 @@ const Page = () => {
                                             </div>
                                         </div>
                                     </div>
-
-                                </div>
+                            ))
+                        }
                             </div>
+                                </div>
                         </div>
                     </div>
                 </>)
