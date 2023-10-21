@@ -4,6 +4,7 @@ import axios from 'axios'
 
 
 const Page = () => {
+    let SelectedFilesProfile
     const [CreateModal, SetCreateModel] = useState()
     const [EditModal, setEditmodal] = useState()
     const [imageTake,setImageTake] = useState()
@@ -24,7 +25,7 @@ const Page = () => {
     const handleFileChangesProfile = async (event)=>{
         console.log("hallooo")
         const Cloudname = import.meta.env.VITE_CLOUDNAME
-        const SelectedFilesProfile =event.target.files && event.target.files[0]
+         SelectedFilesProfile =event.target.files && event.target.files[0]
         if (SelectedFilesProfile) {
            
             const formData = new FormData();
@@ -48,6 +49,17 @@ const Page = () => {
           }
           console.log('Selected file:', SelectedFilesProfile);
         };
+        console.log(heading,description,date,image,time,size)
+
+
+     const CreateData = async() =>{
+        console.log("haloooo");
+        const response = await axios.post("http://localhost:3000/AddData",{heading,description,date,time,image,size})
+        console.log(response)
+     }
+
+
+
     return (
         <div>
             {
@@ -70,6 +82,7 @@ const Page = () => {
                                             type="text"
                                             name="Heading"
                                             placeholder="Please Enter Your Heading"
+                                            onChange={(e)=>{setHeading(e.target.value)}}
                                             className="w-full h-10 border-black border-2 rounded-lg bg-transparent"
                                         />
                                     </div>
@@ -84,6 +97,7 @@ const Page = () => {
                                             type="text"
                                             name="Description"
                                             placeholder="Insert your description here"
+                                            onChange={(e)=>{setDescription(e.target.value)}}
                                             className="w-full h-10 border-black border-2 rounded-lg bg-transparent"
                                         />
                                     </div>
@@ -98,20 +112,21 @@ const Page = () => {
                                             <input
                                                 type="Date"
                                                 name="Date"
+                                                onChange={(e)=>{setDate(e.target.value)}}
                                                 className="w-full h-10 border-black border-2 rounded-lg bg-transparent flex"
                                             />
                                         </div>
                                         <div className="w-full">
                                             <div className="w-full h-8 flex items-center">
                                                 <h1 className="font-semibold text-black ml-1">
-                                                    Username
+                                                    Time
                                                     <span className="font-semibold text-red-700 ml-1">*</span>
                                                 </h1>
                                             </div>
                                             <input
                                                 type="Time"
                                                 name="Username"
-                                                placeholder="Please Enter Your Username"
+                                                onChange={(e)=>{setTime(e.target.value)}}
                                                 className="w-full h-10 border-black border-2 rounded-lg bg-transparent flex"
                                             />
                                         </div>
@@ -123,11 +138,11 @@ const Page = () => {
                                                 <span className="font-semibold text-red-700 ml-1">*</span>
                                             </h1>
                                         </div>
-                                        <select name="mySelect" className="w-full  font-bold text-lg h-10 border-2 border-black text-center ">
-                                            <option value="option1">Low</option>
-                                            <option value="option2">Meadium</option>
-                                            <option value="option3">High</option>
-                                            <option value="option3">All</option>
+                                        <select onChange={(e)=>{setSize(e.target.value)}} name="mySelect" className="w-full  font-bold text-lg h-10 border-2 border-black text-center ">
+                                            <option value="Low">Low</option>
+                                            <option value="Meadium">Meadium</option>
+                                            <option value="High">High</option>
+                                            <option value="All">All</option>
                                         </select>
                                     </div>
                                     <div className="w-full ">
@@ -141,7 +156,10 @@ const Page = () => {
                                             className="w-full h-10 border-black border-2 border-dashed rounded-lg bg-transparent flex justify-center items-center font-bold text-lg"
                                             onClick={ImageDivClick}
                                         >
-                                            Upload Profile Image
+                                            {
+                                                SelectedFilesProfile?(SelectedFilesProfile):(<>Upload Image here</>)
+                                            }
+                                            
                                         </div>
                                         <input
                                             type="file"
@@ -162,9 +180,9 @@ const Page = () => {
                                         </div>
                                         <div
                                             className="w-1/2 h-10 bg-transparent border-2 border-black text-black hover:bg-black hover:text-white flex justify-center items-center font-bold text-lg hover:cursor-pointer"
-
+                                           onClick={(e)=>{e.preventDefault(),CreateData()}}
                                         >
-                                            Update
+                                            Create
                                         </div>
                                     </div>
                                 </form>
@@ -178,7 +196,7 @@ const Page = () => {
                             <div className="w-full h-full  ">
                                 <div className="w-full h-14  flex justify-end items-center">
                                     <select name="mySelect" className="w-2/12 font-serif font-bold text-lg h-10 bg-black text-white mx-2 hover:bg-transparent hover:border-2 hover:border-black hover:text-black text-center ">
-                                        <option value="option1" className="w-full h-10 bg-red-100" >Filter</option>
+                                        <option  className="w-full h-10 bg-red-100" >Filter</option>
                                         <option value="option1">Low</option>
                                         <option value="option2">Meadium</option>
                                         <option value="option3">High</option>
@@ -212,7 +230,7 @@ const Page = () => {
                                                     <button className="w-full h-full border-2 border-black text-xl font-bold  hover:text-white hover:bg-black" >Edit</button>
                                                 </div>
                                                 <div className="w-full h-1/2 mt-1 ">
-                                                    <button className="w-full h-full bg-black text-white  hover:text-black hover:bg-transparent hover:border-2 border-black text-xl font-bold"  >Delet</button>
+                                                    <button className="w-full h-full bg-black text-white  hover:text-black hover:bg-transparent hover:border-2 border-black text-xl font-bold"  >Delete</button>
                                                 </div>
                                             </div>
                                         </div>
