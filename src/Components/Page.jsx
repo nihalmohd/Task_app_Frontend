@@ -73,11 +73,13 @@ const Page = () => {
 
 useEffect(()=>{
   fetchData()
-},[CreateModal])
+},[CreateModal,EditModal])
 
 const Delete =async (id) =>{
     console.log("halooooooooooooooooooooooooooooooooooooo")
     const Response = await axios.post("http://localhost:3000/DeletData",{id})
+    SetCreateModel(false)
+    
   }
 
 
@@ -95,6 +97,27 @@ const Delete =async (id) =>{
     console.log(Response.data)
     setEditmodal(false)
   }
+
+  const ChageValues = async(size) =>{
+    console.log(size,"size");
+    const response = await axios.get("http://localhost:3000/GetproductbySize",{params:{size}})
+    console.log(response.data)
+    setFetchedData(response.data.data)
+  }
+  
+
+  const handleSelectChange = event => {
+    console.log("working");
+    const selectedValue = event.target.value;
+    // setSelectedOption(selectedValue);
+    if(selectedValue==="All"){
+       fetchData()
+    }else{
+
+        ChageValues(selectedValue)
+    }
+  };
+
 
     return (
         <div>
@@ -175,10 +198,11 @@ const Delete =async (id) =>{
                                             </h1>
                                         </div>
                                         <select onChange={(e)=>{setSize(e.target.value)}} name="mySelect" className="w-full  font-bold text-lg h-10 border-2 border-black text-center ">
+                                            <option>Priority</option>
                                             <option value="Low">Low</option>
-                                            <option value="Meadium">Meadium</option>
+                                            <option value="Medium">Meadium</option>
                                             <option value="High">High</option>
-                                            <option value="All">All</option>
+                                           
                                         </select>
                                     </div>
                                     <div className="w-full ">
@@ -305,10 +329,11 @@ const Delete =async (id) =>{
                                             </h1>
                                         </div>
                                         <select onChange={(e)=>{setSize(e.target.value)}} name="mySelect" className="w-full  font-bold text-lg h-10 border-2 border-black text-center ">
+                                            <option>Priority</option>
                                             <option value="Low">Low</option>
-                                            <option value="Meadium">Meadium</option>
+                                            <option value="Medium">Medium</option>
                                             <option value="High">High</option>
-                                            <option value="All">All</option>
+                                           
                                         </select>
                                     </div>
                                     <div className="w-full ">
@@ -362,12 +387,12 @@ const Delete =async (id) =>{
                         <div className="w-10/12 h-5/6 bg-white rounded-3xl shadow-2xl p-1">
                             <div className="w-full h-full  ">
                                 <div className="w-full h-14  flex justify-end items-center">
-                                    <select name="mySelect" className="w-2/12 font-serif font-bold text-lg h-10 bg-black text-white mx-2 hover:bg-transparent hover:border-2 hover:border-black hover:text-black text-center ">
-                                        <option  className="w-full h-10 bg-red-100" >Filter</option>
-                                        <option value="option1">Low</option>
-                                        <option value="option2">Meadium</option>
-                                        <option value="option3">High</option>
-                                        <option value="option3">All</option>
+                                    <select onChange={handleSelectChange} name="mySelect" className="w-2/12 font-serif font-bold text-lg h-10 bg-black text-white mx-2 hover:bg-transparent hover:border-2 hover:border-black hover:text-black text-center ">
+                                        <option value="All"  className="w-full h-10 bg-red-100" >Filter</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                        <option value="All">All</option>
                                     </select>
                                     <button className="w-2/12 font-serif font-bold text-lg h-10 bg-black text-white mx-2 hover:bg-transparent hover:border-2 hover:border-black hover:text-black " onClick={() => SetCreateModel(true)}>
                                         Create a task
